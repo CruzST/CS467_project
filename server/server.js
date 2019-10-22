@@ -10,6 +10,7 @@ var express = require("express"),
   seedUser3 = require("./seedUser3"),
   cors = require("cors"),
   multer = require("multer");
+var history = require("connect-history-api-fallback");
 
 mongoose.Promise = global.Promise;
 mongoose.set("useFindAndModify", false);
@@ -28,6 +29,7 @@ mongoose.connect(
 app.use(bodyParser.json({ type: "application/json" }));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
+app.use(history);
 
 app.use(
   cors({
