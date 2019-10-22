@@ -14,14 +14,9 @@ var express = require("express"),
 mongoose.Promise = global.Promise;
 mongoose.set("useFindAndModify", false);
 
-/*
-// v1 - local
-mongoose.connect("mongodb://localhost/StoreDatabase", {
-  useNewUrlParser: true,
-  useCreateIndex: true
-});
-*/
-// v2 - attempt to use mongodb cloud - acceptance testing
+const PORT = process.env.PORT || 3000;
+
+// mongodb cloud connect string
 mongoose.connect(
   "mongodb+srv://sbcruz1:cs467pw@storedatabasev2-em6mz.mongodb.net/test?retryWrites=true",
   {
@@ -29,7 +24,6 @@ mongoose.connect(
     useCreateIndex: true
   }
 );
-// end v2
 
 app.use(bodyParser.json({ type: "application/json" }));
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -64,19 +58,6 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-/** MARK FOR DELETE
-//multer storage functinoality, will save the image paths to a local folder
-var storage = multer.diskStorage({
-  destination: function(req, file, cb) {
-    cb(null, "./images");
-  },
-  filename: function(req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
-  }
-});
-
- */
-
 // Define routes
 var userRoutes = require("./routes/users");
 var storeRoutes = require("./routes/store");
@@ -105,6 +86,17 @@ app.use("/orders", orderRoutes);
 app.use("/cart", cartRoutes);
 app.use("/address", addressRoutes);
 
-app.listen(3000, function() {
-  console.log("Listening on port 3000");
+// Handle production
+if (process.env.NODE_ENV === "production") {
+  // Static folder
+  app.use(express.static(__dirname + "/public/"));
+
+  // handle SPA
+  app.get(/.*/, (req, res) => {
+    res.sendFile(__dirname + "/public/index.html");
+  });
+}
+
+app.listen(PORT, function() {
+  console.log("Listening on port: " + PORT);
 });
