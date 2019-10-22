@@ -89,11 +89,11 @@ app.use("/address", addressRoutes);
 // Handle production
 if (process.env.NODE_ENV === "production") {
   // Static folder
-  app.use(express.static(__dirname + "/dist/etsyclone/"));
+  app.use(express.static(__dirname + "/public/dist/"));
 
   // handle SPA
   app.get(/.*/, (req, res) => {
-    res.sendFile(__dirname + "/dist/etsyclone/index.html");
+    res.sendFile(__dirname + "/public/dist/index.html");
   });
 }
 
