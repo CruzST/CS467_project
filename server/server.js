@@ -74,7 +74,7 @@ seedUser3();
 
 // serves the front end
 app.get("/", function(req, res) {
-  res.sendFile(__dirname + "/dist/index.html");
+  res.sendFile(__dirname + "/public/dist/index.html");
 });
 
 // Define paths
